@@ -1,35 +1,22 @@
 "use client";
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import React from 'react'
+import { ProductsContext } from '@/context/products';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useContext } from 'react';
 
 const Navbar = () => {
 
   const pathRoute = usePathname();
-
-  const allRoutes = [ 
-        {
-            route: "/products",
-            name: "Products"
-        },
-        {
-            route: "/cart",
-            name: "Cart"
-        }
-    ];
+  const {cartProducts} = useContext(ProductsContext);
 
   return (
     <>
         <nav className='w-full p-4 flex justify-between place-items-center bg-indigo-600 text-white'>
             <Link href='/'><h1>Next Cart</h1></Link>
             <ul className='flex flex-col justify-center place-items-center sm:flex-row gap-3'>
-                {
-                    allRoutes.map((route, index) => {
-                            return (
-                                <Link key={index} href={route.route} className={`${pathRoute===route.route ? "bg-white text-indigo-600 py-2 px-4 rounded-md" : ""}`}><li>{route.name}</li></Link>
-                            )
-                    })
-                }
+
+                <Link href="/products" className={`${pathRoute==="/products" ? "bg-white text-indigo-600 py-2 px-4 rounded-md" : ""}`}><li>Products</li></Link>
+                <Link href="/cart" className={`${pathRoute==="/cart" ? "bg-white text-indigo-600 py-2 px-4 rounded-md" : ""}`}><li>Cart <sup className='py-1 px-2 bg-orange-600 text-white rounded-xl'>{cartProducts.length}</sup></li></Link>
             </ul>
         </nav>
     </>

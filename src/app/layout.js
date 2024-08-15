@@ -1,18 +1,26 @@
+"use client";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
 import { Toaster } from 'sonner';
+import { ProductsContext } from "@/context/products";
+import { useEffect, useState } from "react";
+import { getProducts } from "@/utils/localstorage";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "Profile.fyi Assignment",
-  description: "Frontend assignment for Profile.fyi",
-};
-
 export default function RootLayout({ children }) {
+  const [cartProducts, setCartProducts] = useState([]);
+
+  useEffect(() => {
+    const products = getProducts();
+    setCartProducts(products);
+  },[]);
+
   return (
+    <>
+    <ProductsContext.Provider value={{cartProducts, setCartProducts}}>
     <html lang="en">
       <body className={inter.className}>
         <Navbar/>
@@ -21,5 +29,7 @@ export default function RootLayout({ children }) {
         <Toaster />
       </body>
     </html>
+    </ProductsContext.Provider>
+    </>
   );
 }

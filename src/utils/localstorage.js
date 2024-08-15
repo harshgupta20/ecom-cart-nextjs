@@ -28,6 +28,7 @@ function deleteSingleProduct(product) {
     const products = getProducts();
     const newProducts = products.filter((localProduct) => localProduct.id !== product.id);
     localStorage.setItem("products", JSON.stringify(newProducts));
+    return newProducts;
 }
 
 function updateProduct(product) {

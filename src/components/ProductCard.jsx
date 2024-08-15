@@ -1,13 +1,15 @@
 "use client";
+import { ProductsContext } from '@/context/products';
 import { errorAlert, successAlert } from '@/utils/alerts';
 import { deleteSingleProduct, getProducts, setProduct } from '@/utils/localstorage';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 const ProductCard = ({product}) => {
-    
+   
     const [loading, setLoading] = useState(false);
     const [isProductInCart, setIsProductInCart] = useState(false);
+    const {setCartProducts} = useContext(ProductsContext);
    
     const handleAddToCart = async () => {
         try{
@@ -19,6 +21,7 @@ const ProductCard = ({product}) => {
             successAlert(`${product?.title} added to cart`);
             setLoading(false);
             setIsProductInCart(true);
+            setCartProducts(newProductsList);
         }
         catch(error){
             errorAlert(error.message);
@@ -35,6 +38,7 @@ const ProductCard = ({product}) => {
             successAlert(`${product?.title} removed from cart`);
             setLoading(false);
             setIsProductInCart(false);
+            setCartProducts(newProductsList);
         }
         catch(error){
             errorAlert(error.message);
@@ -73,7 +77,7 @@ const ProductCard = ({product}) => {
             </div>
             {
                 isProductInCart ?
-                <button onClick={handleRemoveFromCart} className={`w-full py-2 px-5 bg-orange-600 rounded-md text-white ${loading && "opacity-80"}`}>Remove from Cart</button>
+                <button onClick={handleRemoveFromCart} disabled={loading} className={`w-full py-2 px-5 bg-orange-600 rounded-md text-white ${loading && "opacity-80"}`}>{loading ? "Removing..." : "Remove from Cart"}</button>
                 :
                 <button onClick={handleAddToCart} disabled={loading} className={`w-full py-2 px-5 bg-indigo-600 rounded-md text-white ${loading && "opacity-80"}`}>{loading ? "Adding..." : "Add to Cart"}</button>
             }
