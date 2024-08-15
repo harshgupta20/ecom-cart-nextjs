@@ -1,22 +1,61 @@
 "use client";
-import { successAlert } from '@/utils/alerts';
+import { errorAlert, successAlert } from '@/utils/alerts';
+import { deleteSingleProduct, getProducts, setProduct } from '@/utils/localstorage';
 import Image from 'next/image';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
 
 const ProductCard = ({product}) => {
-
+    
     const [loading, setLoading] = useState(false);
-
+    const [isProductInCart, setIsProductInCart] = useState(false);
+   
     const handleAddToCart = async () => {
-        console.log('Product added to cart')
-        setLoading(true);
-
-        // simulate loading behaviour
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        successAlert(`${product?.title} added to cart`);
-        setLoading(false);
+        try{
+            setLoading(true);
+    
+            // simulate loading behavior
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            const newProductsList = setProduct(product);
+            successAlert(`${product?.title} added to cart`);
+            setLoading(false);
+            setIsProductInCart(true);
+        }
+        catch(error){
+            errorAlert(error.message);
+            setLoading(false);
+        }
     }
+
+    const handleRemoveFromCart = async () => {
+        try{
+            setLoading(true);
+            // simulate loading behavior
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            const newProductsList = deleteSingleProduct(product);
+            successAlert(`${product?.title} removed from cart`);
+            setLoading(false);
+            setIsProductInCart(false);
+        }
+        catch(error){
+            errorAlert(error.message);
+            setLoading(false);
+        }
+    }
+
+
+    function checkProductInCart(productId){
+        let userProducts = getProducts();
+        if(userProducts){
+            userProducts = userProducts.map((product) => product.id);
+            if(userProducts.includes(productId)){
+                setIsProductInCart(true);
+            }
+        }
+    }
+
+    useEffect(() => {
+        checkProductInCart(product?.id);
+    },[isProductInCart]);
 
   return (
     <>   
@@ -32,7 +71,12 @@ const ProductCard = ({product}) => {
                     <p className='text-green-600 font-semibold'>{product.discountPercentage} % off</p>
                 </div>
             </div>
-            <button onClick={handleAddToCart} disabled={loading} className={`w-full py-2 px-5 bg-indigo-600 rounded-md text-white ${loading && "opacity-80"}`}>{loading ? "Adding..." : "Add to Cart"}</button>
+            {
+                isProductInCart ?
+                <button onClick={handleRemoveFromCart} className={`w-full py-2 px-5 bg-orange-600 rounded-md text-white ${loading && "opacity-80"}`}>Remove from Cart</button>
+                :
+                <button onClick={handleAddToCart} disabled={loading} className={`w-full py-2 px-5 bg-indigo-600 rounded-md text-white ${loading && "opacity-80"}`}>{loading ? "Adding..." : "Add to Cart"}</button>
+            }
         </div>
 
     </>
