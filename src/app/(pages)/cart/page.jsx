@@ -2,11 +2,15 @@
 
 import CartProductCard from '@/components/CartProductCard';
 import { ProductsContext } from '@/context/products';
+import { deleteProducts } from '@/utils/localstorage';
 import { useContext, useEffect, useState } from 'react';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/src/sweetalert2.scss'
 
 const CartPage = () => {
 
-  const {cartProducts} = useContext(ProductsContext);
+  const {cartProducts, setCartProducts} = useContext(ProductsContext);
+  const [loading, setLoading] = useState(false);
 
   const [priceDetails, setPriceDetails] = useState({
     totalAmount: 0,
@@ -21,21 +25,42 @@ const CartPage = () => {
     let totalAmount = 0;
     let totalDiscountedAmount = 0;
     let totalPayableAmount = 0;
+
     cartProducts.forEach(product => {
-      // totalAmount += ((product?.price*product?.discountPercentage)/100).toFixed(2);
       // To get the actual price of the product before discount
       totalAmount += ((product?.price*100)/(100 - product?.discountPercentage))* (product?.quantity ?? 1);
       // To get the discounted amount of the product
       totalDiscountedAmount += (((product?.price*100)/(100 - product?.discountPercentage)) - product?.price)* (product?.quantity ?? 1);
       totalPayableAmount += (product?.price)* (product?.quantity ?? 1);
+    });
 
-    });  
     const platformFee = 3;
     const deliveryCharges = 150;
     const totalSaving = totalDiscountedAmount+  deliveryCharges;
 
     setPriceDetails({totalAmount,totalDiscountedAmount,totalPayableAmount,platformFee,deliveryCharges,totalSaving});
   } 
+
+
+  async function handlePayNow(amount) {
+    setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    paymentApiLogic(amount);
+    setLoading(false);
+
+    setCartProducts([]);
+    deleteProducts();
+  }
+
+  function paymentApiLogic(amount) {
+    // Add your payment gateway logic here
+    Swal.fire({
+      title: `Payment of ${amount} INR is Successful 🎉`,
+      text: `Your order has been placed successfully`,
+      icon: 'success',
+      confirmButtonText: 'Okay'
+    })
+  }
 
   useEffect(() => {
     calculateTotalPricing();
@@ -101,6 +126,12 @@ const CartPage = () => {
                   <tfoot className="bg-green-50">
                     <tr className="border-t">
                       <td colSpan="2" className="p-4 text-green-600 text-center font-medium">You will save {priceDetails.totalSaving.toFixed(2)} INR on this order</td>
+                    </tr>
+                  </tfoot>
+                  <tfoot className="bg-green-50">
+                    <tr className="border-t">
+                      
+                      <td colSpan="2" ><button onClick={() => handlePayNow(priceDetails.totalPayableAmount.toFixed(2))} className="p-4 bg-orange-500 text-white cursor-pointer text-center font-medium w-full hover:opacity-80">{loading ? "Confirming Order..." : "Pay Now"}</button></td>
                     </tr>
                   </tfoot>
                 </table>
