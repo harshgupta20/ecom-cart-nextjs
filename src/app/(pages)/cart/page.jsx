@@ -2,12 +2,44 @@
 
 import CartProductCard from '@/components/CartProductCard';
 import { ProductsContext } from '@/context/products';
-import { getProducts } from '@/utils/localstorage';
 import { useContext, useEffect, useState } from 'react';
 
 const CartPage = () => {
 
   const {cartProducts} = useContext(ProductsContext);
+
+  const [priceDetails, setPriceDetails] = useState({
+    totalAmount: 0,
+    totalDiscountedAmount: 0,
+    totalPayableAmount: 0,
+    platformFee: 0,
+    deliveryCharges: 0,
+    totalSaving: 0
+  });
+
+  function calculateTotalPricing() {
+    let totalAmount = 0;
+    let totalDiscountedAmount = 0;
+    let totalPayableAmount = 0;
+    cartProducts.forEach(product => {
+      // totalAmount += ((product?.price*product?.discountPercentage)/100).toFixed(2);
+      // To get the actual price of the product before discount
+      totalAmount += ((product?.price*100)/(100 - product?.discountPercentage))* (product?.quantity ?? 1);
+      // To get the discounted amount of the product
+      totalDiscountedAmount += (((product?.price*100)/(100 - product?.discountPercentage)) - product?.price)* (product?.quantity ?? 1);
+      totalPayableAmount += (product?.price)* (product?.quantity ?? 1);
+
+    });  
+    const platformFee = 3;
+    const deliveryCharges = 150;
+    const totalSaving = totalDiscountedAmount+  deliveryCharges;
+
+    setPriceDetails({totalAmount,totalDiscountedAmount,totalPayableAmount,platformFee,deliveryCharges,totalSaving});
+  } 
+
+  useEffect(() => {
+    calculateTotalPricing();
+  }, [cartProducts]);
 
   return (
     <>
@@ -46,29 +78,29 @@ const CartPage = () => {
                   </thead>
                   <tbody>
                     <tr className="border-t">
-                      <td className="p-4 text-gray-600">Price (2 items)</td>
-                      <td className="p-4 text-right font-medium text-gray-800">₹13,989</td>
+                      <td className="p-4 text-gray-600">Price ({cartProducts.length} Products)</td>
+                      <td className="p-4 text-right font-medium text-gray-800">{priceDetails.totalAmount.toFixed(2)} INR</td>
                     </tr>
                     <tr className="border-t">
                       <td className="p-4 text-gray-600">Discount</td>
-                      <td className="p-4 text-right font-medium text-green-600">−₹10,192</td>
+                      <td className="p-4 text-right font-medium text-green-600">{priceDetails.totalDiscountedAmount.toFixed(2)} INR</td>
                     </tr>
                     <tr className="border-t">
                       <td className="p-4 text-gray-600">Platform Fee</td>
-                      <td className="p-4 text-right font-medium text-gray-800">₹3</td>
+                      <td className="p-4 text-right font-medium text-gray-800">{priceDetails.platformFee} INR</td>
                     </tr>
                     <tr className="border-t">
                       <td className="p-4 text-gray-600">Delivery Charges</td>
-                      <td className="p-4 text-right font-medium text-gray-800"><s>₹150</s> <span className="text-green-600">Free</span></td>
+                      <td className="p-4 text-right font-medium text-gray-800"><s>{priceDetails.deliveryCharges} INR</s> <span className="text-green-600">Free</span></td>
                     </tr>
                     <tr className="border-t">
                       <td className="p-4 text-gray-600 font-medium">Total Amount</td>
-                      <td className="p-4 text-right font-medium text-gray-800">₹3,800</td>
+                      <td className="p-4 text-right font-medium text-gray-800">{priceDetails.totalPayableAmount.toFixed(2)} INR</td>
                     </tr>
                   </tbody>
                   <tfoot className="bg-green-50">
                     <tr className="border-t">
-                      <td colSpan="2" className="p-4 text-green-600 text-center font-medium">You will save ₹10,189 on this order</td>
+                      <td colSpan="2" className="p-4 text-green-600 text-center font-medium">You will save {priceDetails.totalSaving.toFixed(2)} INR on this order</td>
                     </tr>
                   </tfoot>
                 </table>

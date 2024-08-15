@@ -60,7 +60,7 @@ const CartProductCard = ({product}) => {
                     </div>
                     <div className='flex flex-wrap gap-2'>
                         <p className='font-bold'>{product?.price} INR</p>
-                        <del className='text-gray-400'>{((product?.price) + (product?.price*product?.discountPercentage)/100).toFixed(2) } INR</del>
+                        <del className='text-gray-400'>{((product?.price*100)/(100 - product?.discountPercentage)).toFixed(2) } INR</del>
                         <p className='text-green-600 font-semibold'>{product.discountPercentage} % off</p>
                     </div>
                 </div>
