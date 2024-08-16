@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 import { ProductsContext } from "@/context/products";
 import { useEffect, useState } from "react";
 import { getProducts } from "@/utils/localstorage";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <Navbar/>
         {children}
-
+        <Footer/>
         <Toaster />
       </body>
     </html>

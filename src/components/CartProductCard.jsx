@@ -50,15 +50,15 @@ const CartProductCard = ({product}) => {
 
   return (
     <div className='p-4'>
-        <div className='flex justify-between'>
-            <div className='flex gap-6'>
-                <Image src={product?.images[0]} width={150} height={150} loading="lazy" alt='Product'/>
-                <div className='flex flex-col justify-between py-2'>
+        <div className='flex flex-col sm:flex-row justify-between'>
+            <div className='flex flex-col sm:flex-row gap-6'>
+                <Image src={product?.images[0]} className='m-auto sm:m-0' width={150} height={150} loading="lazy" alt='Product'/>
+                <div className='flex flex-col justify-between gap-3 py-2'>
                     <div>
-                        <h3 className='text-2xl'>{product?.title}</h3>
-                        <p className='text-sm text-gray-500'>{product?.description}</p>
+                        <h3 className='text-xl sm:text-2xl'>{product?.title}</h3>
+                        <p className='text-xs sm:text-sm text-gray-500'>{product?.description}</p>
                     </div>
-                    <div className='flex flex-wrap gap-2'>
+                    <div className='flex flex-wrap gap-1 sm:gap-2'>
                         <p className='font-bold'>{product?.price} INR</p>
                         <del className='text-gray-400'>{((product?.price*100)/(100 - product?.discountPercentage)).toFixed(2) } INR</del>
                         <p className='text-green-600 font-semibold'>{product.discountPercentage} % off</p>
@@ -66,10 +66,10 @@ const CartProductCard = ({product}) => {
                 </div>
             </div>
             <div>
-                <p className='text-sm'>Delivered By 21 Auguest</p>
+                <p className='text-sm'>Delivered By 25 August</p>
             </div>
         </div>
-        <div className='flex place-items-center gap-3 justify-end'>
+        <div className='flex place-items-center gap-3 justify-between sm:justify-end'>
             <div className='flex place-items-center gap-3 border-2 border-gray-200 rounded-md'>
                 <button onClick={() => handleCountChange(-1)} className='p-2 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-tl-md rounded-bl-md'>-</button>
                 <p className='text-sm'>{product?.quantity ?? 1}</p>

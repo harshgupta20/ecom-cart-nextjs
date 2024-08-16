@@ -31,12 +31,12 @@ const CartPage = () => {
       totalAmount += ((product?.price*100)/(100 - product?.discountPercentage))* (product?.quantity ?? 1);
       // To get the discounted amount of the product
       totalDiscountedAmount += (((product?.price*100)/(100 - product?.discountPercentage)) - product?.price)* (product?.quantity ?? 1);
-      totalPayableAmount += (product?.price)* (product?.quantity ?? 1);
+      totalPayableAmount += (product?.price)*(product?.quantity ?? 1);
     });
 
     const platformFee = 3;
     const deliveryCharges = 150;
-    const totalSaving = totalDiscountedAmount+  deliveryCharges;
+    const totalSaving = totalDiscountedAmount+deliveryCharges;
 
     setPriceDetails({totalAmount,totalDiscountedAmount,totalPayableAmount,platformFee,deliveryCharges,totalSaving});
   } 
@@ -68,9 +68,9 @@ const CartPage = () => {
 
   return (
     <>
-      <div className='w-full h-screen flex bg-gray-100 p-4'>
+      <div className='w-full min-h-screen flex flex-col sm:flex-row bg-gray-100 p-4'>
         <div className='sm:w-8/12 p-6'>
-          <div className='w-full p-4 shadow-md'>
+          <div className='w-full p-4 gap-4 shadow-md'>
             {
               cartProducts.length === 0 ? (
                 <div className='text-center'>
@@ -86,16 +86,9 @@ const CartPage = () => {
         <div className='sm:w-4/12 py-6'>
           <div className="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
             {
-              cartProducts.length === 0 ? (
+              cartProducts.length !== 0 && (
                 <>
-                  <div className="px-4 py-2">
-                    <h1 className="text-3xl text-gray-800 font-bold">Order Summary</h1>
-                    <p className="text-sm text-gray-600">No payable amount.</p>
-                  </div>
-                </>
-              )
-              : (
-                <table className="w-full">
+                  <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
                       <th colSpan="2" className="text-left p-4 text-gray-600 font-medium">PRICE DETAILS</th>
@@ -135,6 +128,7 @@ const CartPage = () => {
                     </tr>
                   </tfoot>
                 </table>
+                </>
               )
             }
           </div>
