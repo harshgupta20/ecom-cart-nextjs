@@ -2,7 +2,11 @@
 
 To view the project live [Click Here](https://ecom-cart-nextjs.vercel.app/).
 
-![MyCart Preview](https://github.com/user-attachments/assets/5479bebb-51b3-4e3c-a459-31e31a451445)
+![MyCart Preview](https://github.com/user-attachments/assets/a7e71230-a91b-4102-97c5-e1f9e0b5f80c)
+
+
+
+
 
 
 ## Technologies Used
