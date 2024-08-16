@@ -2,8 +2,7 @@
 
 To view the project live [Click Here](https://ecom-cart-nextjs.vercel.app/).
 
-![MyCart Preview](https://github.com/user-attachments/assets/a7e71230-a91b-4102-97c5-e1f9e0b5f80c)
-
+![2024-08-1623-28-15-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/8dcf2e10-8285-4eda-be26-f9f172440c90)
 
 
 
